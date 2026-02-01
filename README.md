@@ -26,8 +26,7 @@ Il permet d’**importer**, **visualiser**, **modifier**, **nettoyer**, **édite
 👉 https://qif-editor.streamlit.app/
 
 ### 💻 Version HTML / JavaScript  
-👉 Ouvrir simplement `index.html` dans un navigateur  
-*(aucune installation nécessaire)*
+👉 https://olam11.github.io/qif-editor/
 
 ---
 
