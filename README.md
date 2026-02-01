@@ -3,8 +3,6 @@
 Un éditeur moderne et intuitif pour fichiers **.QIF** (Quicken Interchange Format).  
 Il permet d’**importer**, **visualiser**, **modifier**, **nettoyer**, **éditer** et **exporter** facilement des données bancaires.
 
----
-
 ## ✨ Fonctionnalités
 
 - 📂 Import de fichiers **.QIF**
