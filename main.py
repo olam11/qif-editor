@@ -8,7 +8,7 @@ import re
 st.set_page_config(
     page_title="Éditeur QIF ✨",
     page_icon="💸",
-    layout="centered"
+    layout="wide",
 )
 
 # -----------------------------
@@ -106,32 +106,33 @@ if uploaded_file:
     # -----------------------------
     # 🧹 NETTOYAGE AVANCÉ
     # -----------------------------
-    st.subheader("🧽 Nettoyage des données")
+    with st.container(border=True):
+            st.subheader("🧽 Nettoyage des données")
 
-    champ = st.selectbox("🔎 Choisir le champ :", st.session_state.df.columns)
+            champ = st.selectbox("🔎 Choisir le champ :", st.session_state.df.columns)
 
-    operateur = st.selectbox(
-        "🛠️ Choisir l’opérateur :",
-        [
-            "contient",
-            "ne contient pas",
-            "commence par",
-            "finit par",
-            "est exactement égal",
-            # "pattern * (wildcard)"
-        ]
-    )
+            operateur = st.selectbox(
+                "🛠️ Choisir l’opérateur :",
+                [
+                    "contient",
+                    "ne contient pas",
+                    "commence par",
+                    "finit par",
+                    "est exactement égal",
+                    # "pattern * (wildcard)"
+                ]
+            )
 
-    valeur = st.text_input("✏️ Valeur à rechercher", placeholder="ex: sa ou sal*")
+            valeur = st.text_input("✏️ Valeur à rechercher", placeholder="ex: sa ou sal*")
 
-    if st.button("🗑️ Supprimer les lignes correspondantes"):
-        mask = apply_filter(st.session_state.df, champ, operateur, valeur)
-        nb = mask.sum()
+            if st.button("🗑️ Supprimer les lignes correspondantes"):
+                mask = apply_filter(st.session_state.df, champ, operateur, valeur)
+                nb = mask.sum()
 
-        st.session_state.df = st.session_state.df[~mask]
-        st.success(f"✨ {nb} ligne(s) supprimée(s) selon '{operateur}'")
+                st.session_state.df = st.session_state.df[~mask]
+                st.success(f"✨ {nb} ligne(s) supprimée(s) selon '{operateur}'")
 
-        st.rerun()
+                st.rerun()
 
     # -----------------------------
     # 📥 EXPORT
