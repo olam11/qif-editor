@@ -27,8 +27,20 @@ Il permet d’**importer**, **visualiser**, **modifier**, **nettoyer**, **édite
 
 ### 💻 Version HTML / JavaScript  
 👉 https://olam11.github.io/qif-editor/
+## 🔒 Confidentialité & traitement local
 
----
+La version **HTML / JavaScript** fonctionne entièrement **en local dans votre navigateur**.  
+Aucune donnée n’est envoyée vers un serveur, aucune information n’est stockée en ligne et aucun fichier n’est transmis à un service externe.
+
+Cela signifie que :
+
+- vos fichiers **.QIF restent sur votre machine**  
+- le traitement est **instantané et hors‑ligne**  
+- l’outil est adapté aux données sensibles (relevés bancaires, transactions, notes privées)  
+- vous gardez un **contrôle total** sur vos informations
+
+En d’autres termes : la version web est non seulement pratique, mais aussi **plus confidentielle** par nature.
+
 
 ## 📁 Structure du projet
 ```
