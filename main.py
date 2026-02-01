@@ -95,6 +95,9 @@ uploaded_file = st.file_uploader("📂 Upload un fichier .qif", type=["qif"])
 if uploaded_file:
     st.success("🎉 Fichier chargé avec succès !")
 
+    # Nom du fichier d'origine sans extension
+    original_name = uploaded_file.name.rsplit(".", 1)[0]
+
     df = read_qif(uploaded_file.read())
 
     if "df" not in st.session_state:
@@ -107,32 +110,32 @@ if uploaded_file:
     # 🧹 NETTOYAGE AVANCÉ
     # -----------------------------
     with st.container(border=True):
-            st.subheader("🧽 Nettoyage des données")
+        st.subheader("🧽 Nettoyage des données")
 
-            champ = st.selectbox("🔎 Choisir le champ :", st.session_state.df.columns)
+        champ = st.selectbox("🔎 Choisir le champ :", st.session_state.df.columns)
 
-            operateur = st.selectbox(
-                "🛠️ Choisir l’opérateur :",
-                [
-                    "contient",
-                    "ne contient pas",
-                    "commence par",
-                    "finit par",
-                    "est exactement égal",
-                    # "pattern * (wildcard)"
-                ]
-            )
+        operateur = st.selectbox(
+            "🛠️ Choisir l’opérateur :",
+            [
+                "contient",
+                "ne contient pas",
+                "commence par",
+                "finit par",
+                "est exactement égal",
+                # "pattern * (wildcard)"
+            ]
+        )
 
-            valeur = st.text_input("✏️ Valeur à rechercher", placeholder="ex: sa ou sal*")
+        valeur = st.text_input("✏️ Valeur à rechercher", placeholder="ex: sa ou sal*")
 
-            if st.button("🗑️ Supprimer les lignes correspondantes"):
-                mask = apply_filter(st.session_state.df, champ, operateur, valeur)
-                nb = mask.sum()
+        if st.button("🗑️ Supprimer les lignes correspondantes"):
+            mask = apply_filter(st.session_state.df, champ, operateur, valeur)
+            nb = mask.sum()
 
-                st.session_state.df = st.session_state.df[~mask]
-                st.success(f"✨ {nb} ligne(s) supprimée(s) selon '{operateur}'")
+            st.session_state.df = st.session_state.df[~mask]
+            st.success(f"✨ {nb} ligne(s) supprimée(s) selon '{operateur}'")
 
-                st.rerun()
+            st.rerun()
 
     # -----------------------------
     # 📥 EXPORT
@@ -142,7 +145,7 @@ if uploaded_file:
     st.download_button(
         label="💾 Télécharger le fichier QIF modifié",
         data=qif_bytes,
-        file_name="export.qif",
+        file_name=f"{original_name}_clean.qif",
         mime="application/qif"
     )
 

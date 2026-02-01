@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Éditeur QIF ✨</title>
+
+  <style>
+    /* ------------------------------
+       🌈 STYLE GLOBAL MODERNE
+    ------------------------------ */
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+      color: #333;
+    }
+
+    header {
+      padding: 30px 40px;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1e1b4b;
+    }
+
+    .subheader {
+      margin-top: 6px;
+      font-size: 1.1rem;
+      color: #4c4a6a;
+    }
+
+    main {
+      padding: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      padding: 25px 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      border: 1px solid rgba(255,255,255,0.7);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.4rem;
+      color: #312e81;
+    }
+
+    .status {
+      padding: 12px 14px;
+      border-radius: 14px;
+      margin-top: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .status.info {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .status.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    /* Upload custom */
+    .upload-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .upload-wrapper input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-btn {
+      padding: 10px 18px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(99, 102, 241, 0.4);
+    }
+
+    #fileName {
+      margin-left: 12px;
+      font-size: 0.95rem;
+      color: #4b5563;
+      font-weight: 500;
+    }
+
+    /* Boutons généraux */
+    button {
+      padding: 9px 16px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(99, 102, 241, 0.4);
+    }
+
+    button.small {
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+    }
+
+    button.danger {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+    }
+
+    /* Barre de nettoyage */
+    .clean-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .clean-bar select,
+    .clean-bar input {
+      flex: 1;
+      min-width: 150px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid #d1d5db;
+      background: #fafafa;
+      font-size: 0.95rem;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .clean-bar select:focus,
+    .clean-bar input:focus {
+      outline: none;
+      border-color: #818cf8;
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.3);
+    }
+
+    .clean-bar button {
+      white-space: nowrap;
+    }
+
+    /* Tableau */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      margin-top: 15px;
+    }
+
+    th {
+      background: #eef2ff;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 600;
+      color: #3730a3;
+      text-align: left;
+    }
+
+    td {
+      background: white;
+      padding: 8px;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      vertical-align: middle;
+    }
+
+    td input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 0.9rem;
+    }
+
+    td input:focus {
+      outline: none;
+    }
+
+    .table-actions {
+      text-align: center;
+      width: 70px;
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>💸 Éditeur de fichiers QIF</h1>
+    <div class="subheader">Importe, modifie, nettoie, édite et exporte tes données facilement ✨</div>
+  </header>
+
+  <main>
+    <!-- Upload -->
+    <div class="card">
+      <h2>📂 Upload un fichier .qif</h2>
+
+      <div class="upload-wrapper">
+        <span class="upload-btn">📁 Choisir un fichier</span>
+        <input type="file" id="fileInput" accept=".qif">
+      </div>
+      <span id="fileName">Aucun fichier sélectionné</span>
+
+      <div id="uploadStatus" class="status info">
+        ⬆️ Importe un fichier QIF pour commencer
+      </div>
+    </div>
+
+    <!-- Tableau éditable -->
+    <div id="editorCard" class="card hidden">
+      <div class="top-actions">
+        <h2>📝 Tableau éditable</h2>
+        <button id="addRowButton">➕ Ajouter une ligne</button>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr id="tableHeaderRow"></tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Nettoyage -->
+    <div id="cleanCard" class="card hidden">
+      <h2>🧽 Nettoyage des données</h2>
+
+      <div class="clean-bar">
+        <select id="fieldSelect"></select>
+
+        <select id="operatorSelect">
+          <option value="contient">contient</option>
+          <option value="ne contient pas">ne contient pas</option>
+          <option value="commence par">commence par</option>
+          <option value="finit par">finit par</option>
+          <option value="est exactement égal">est exactement égal</option>
+        </select>
+
+        <input type="text" id="valueInput" placeholder="Valeur…">
+
+        <button id="deleteButton">🗑️ Supprimer les lignes</button>
+      </div>
+
+      <div id="cleanStatus" class="status success hidden"></div>
+    </div>
+
+    <!-- Export -->
+    <div id="exportCard" class="card hidden">
+      <h2>💾 Export</h2>
+      <button id="downloadButton">💾 Télécharger le fichier QIF modifié</button>
+    </div>
+  </main>
+
+  <script>
+    // "DataFrame" JS
+    let df = [];
+    const columns = ["Date", "Amount", "Payee", "Memo", "Category"];
+
+    // Lecture QIF
+    function readQif(text) {
+      const lines = text.split(/\r?\n/);
+      const records = [];
+      let current = {};
+
+      for (const line of lines) {
+        if (line === "^") {
+          if (Object.keys(current).length) {
+            records.push(current);
+            current = {};
+          }
+        } else if (line.startsWith("D")) current.Date = line.slice(1).trim();
+        else if (line.startsWith("T")) current.Amount = line.slice(1).trim();
+        else if (line.startsWith("P")) current.Payee = line.slice(1).trim();
+        else if (line.startsWith("M")) current.Memo = line.slice(1).trim();
+        else if (line.startsWith("L")) current.Category = line.slice(1).trim();
+      }
+      return records;
+    }
+
+    // Écriture QIF
+    function writeQif(data) {
+      let out = "!Type:Bank\n";
+      for (const row of data) {
+        if (row.Date) out += "D" + row.Date + "\n";
+        if (row.Amount) out += "T" + row.Amount + "\n";
+        if (row.Payee) out += "P" + row.Payee + "\n";
+        if (row.Memo) out += "M" + row.Memo + "\n";
+        if (row.Category) out += "L" + row.Category + "\n";
+        out += "^\n";
+      }
+      return out;
+    }
+
+    // Rendu du tableau
+    function renderTable() {
+      const header = document.getElementById("tableHeaderRow");
+      const body = document.getElementById("tableBody");
+      header.innerHTML = "";
+      body.innerHTML = "";
+
+      // En-têtes
+      columns.forEach(col => {
+        const th = document.createElement("th");
+        th.textContent = col;
+        header.appendChild(th);
+      });
+      const thActions = document.createElement("th");
+      thActions.textContent = "Actions";
+      thActions.classList.add("table-actions");
+      header.appendChild(thActions);
+
+      // Lignes
+      df.forEach((row, i) => {
+        const tr = document.createElement("tr");
+
+        columns.forEach(col => {
+          const td = document.createElement("td");
+          const input = document.createElement("input");
+          input.value = row[col] || "";
+          input.addEventListener("input", e => {
+            df[i][col] = e.target.value;
+          });
+          td.appendChild(input);
+          tr.appendChild(td);
+        });
+
+        // Colonne actions
+        const tdActions = document.createElement("td");
+        tdActions.classList.add("table-actions");
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "❌";
+        delBtn.classList.add("small", "danger");
+        delBtn.addEventListener("click", () => {
+          df.splice(i, 1);
+          renderTable();
+        });
+
+        tdActions.appendChild(delBtn);
+        tr.appendChild(tdActions);
+
+        body.appendChild(tr);
+      });
+    }
+
+    // Filtre
+    function applyFilter(data, col, op, val) {
+      val = (val || "").toLowerCase();
+      return data.map(row => {
+        const cell = (row[col] || "").toLowerCase();
+        if (op === "contient") return cell.includes(val);
+        if (op === "ne contient pas") return !cell.includes(val);
+        if (op === "commence par") return cell.startsWith(val);
+        if (op === "finit par") return cell.endsWith(val);
+        if (op === "est exactement égal") return cell === val;
+        return false;
+      });
+    }
+
+    // Upload
+    const fileInput = document.getElementById("fileInput");
+    const fileName = document.getElementById("fileName");
+    const uploadStatus = document.getElementById("uploadStatus");
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      fileName.textContent = file ? file.name : "Aucun fichier sélectionné";
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        df = readQif(e.target.result);
+
+        if (!df.length) {
+          uploadStatus.textContent = "❌ Fichier vide ou invalide";
+          uploadStatus.className = "status info";
+          return;
+        }
+
+        uploadStatus.textContent = "🎉 Fichier chargé avec succès !";
+        uploadStatus.className = "status success";
+
+        document.getElementById("editorCard").classList.remove("hidden");
+        document.getElementById("cleanCard").classList.remove("hidden");
+        document.getElementById("exportCard").classList.remove("hidden");
+
+        // Champs pour le filtre
+        const fieldSelect = document.getElementById("fieldSelect");
+        fieldSelect.innerHTML = "";
+        columns.forEach(c => {
+          const opt = document.createElement("option");
+          opt.value = c;
+          opt.textContent = c;
+          fieldSelect.appendChild(opt);
+        });
+
+        renderTable();
+      };
+      reader.readAsText(file, "utf-8");
+    });
+
+    // Ajouter une ligne
+    document.getElementById("addRowButton").addEventListener("click", () => {
+      const newRow = {};
+      columns.forEach(col => newRow[col] = "");
+      df.push(newRow);
+      renderTable();
+    });
+
+    // Nettoyage
+    document.getElementById("deleteButton").addEventListener("click", () => {
+      if (!df.length) return;
+      const col = document.getElementById("fieldSelect").value;
+      const op = document.getElementById("operatorSelect").value;
+      const val = document.getElementById("valueInput").value;
+
+      const mask = applyFilter(df, col, op, val);
+      const removed = mask.filter(Boolean).length;
+      df = df.filter((_, i) => !mask[i]);
+      renderTable();
+
+      const status = document.getElementById("cleanStatus");
+      status.textContent = `✨ ${removed} ligne(s) supprimée(s)`;
+      status.classList.remove("hidden");
+    });
+
+    // Export
+    document.getElementById("downloadButton").addEventListener("click", () => {
+      if (!df.length) return;
+      const blob = new Blob([writeQif(df)], { type: "application/qif" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "export.qif";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
