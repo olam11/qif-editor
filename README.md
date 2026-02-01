@@ -18,8 +18,6 @@ Il permet d’**importer**, **visualiser**, **modifier**, **nettoyer**, **édite
 - ⚡ Version web 100% **HTML / CSS / JavaScript vanilla**
 - 🚀 Version **Streamlit** prête à l’emploi
 
----
-
 ## 🧪 Démo en ligne
 
 ### 🌐 Version Streamlit  
